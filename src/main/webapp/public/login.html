@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!--<link rel="stylesheet" href="static/css/font-awesome.min.css">-->
+<link rel="stylesheet" href="/resources/css/AdminLTE.min.css">
+<!-- AdminLTE Skins. Choose a skin from the css/skins
+	 folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="/resources/css/all-skins.min.css">
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+	<script src="/resources/js/html5shiv.min.js"></script>
+	<script src="/resources/js/respond.min.js"></script>
+	<![endif]-->
+
+	<!--h+-->
+	<link href="/resources/hplus/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+	<link href="/resources/hplus/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+	<link href="/resources/hplus/css/animate.min.css" rel="stylesheet">
+	<link href="/resources/hplus/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+	<link href="/resources/hplus/css/login.min.css" rel="stylesheet">
+	<!--h+-->
+<title>FlyBird登录</title>
+<script type="text/javascript" src="/resources/hplus/js/jquery.min.js"></script>
+</head>
+<body class="bg-gray-light">
+<div class="middle-box text-center loginscreen animated fadeInDown" id="rrapp">
+	<div class="logo-name">
+		<h1>FLYBIRD</h1>
+	</div>
+	<h3>欢迎使用FLYBIRD</h3>
+		<div class="m-t">
+			<div class="form-group has-feedback">
+					<input  class="form-control"  v-model="user.account" type="text" class="form-control" placeholder="账号">
+			</div>
+			<br/>
+			<div  class="form-group has-feedback">
+					<input class="form-control" type="password" v-model="user.password" class="form-control" placeholder="密码">
+			</div>
+				<button type="submit" @click="login" class="btn btn-success btn-block m-b">登录</button>
+			<p class="text-muted text-center"> <a href="#"><small>忘记密码了？</small></a> | <a href="/public/register.html">注册一个新账号</a>
+		</div>
+</div>
+	<script src="/resources/hplus/js/jquery.min.js?v=2.1.4"></script>
+	<script src="/resources/hplus/js/bootstrap.min.js?v=3.3.6"></script>
+     <script src="/resources/js/vue.min.js"></script>
+<script>
+    var vm = new Vue({
+        el:'#rrapp',
+        data:{
+            user:{},
+        },
+		methods: {
+            login: function (event) {
+                $.ajax({
+                    type: "POST",
+                    url: "/sys/login",
+                    data: JSON.stringify(vm.user),
+                    contentType:"application/json",
+                    dataType: "json",
+                    success: function(result){
+                        if(result.code == 0){//登录成功
+                            parent.location.href ='/sys/main.html?date='+ new Date();
+                        }else{
+                            alert(result.msg);
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>
+</body>
+
+</html>

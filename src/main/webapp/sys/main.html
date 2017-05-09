@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!--<link rel="stylesheet" href="static/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="/resources/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/resources/css/all-skins.min.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/resources/js/html5shiv.min.js"></script>
+    <script src="/resources/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!--h+-->
+    <link href="/resources/hplus/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/resources/hplus/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+
+    <link href="/resources/hplus/css/animate.min.css" rel="stylesheet">
+    <link href="/resources/hplus/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+
+    <!--h+-->
+    <title>FlyBird-主页</title>
+</head>
+<body class="gray-bg">
+            <div id="rrapp">
+                <div class="row">
+                    <div class="col-sm-3 bg-gray-light">
+                        <div class="dropdown profile-element text-center">
+                            <span style="height: 40px;width: 40px"><img alt="image" class="img-circle" :src="user.headImage" /></span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs"><strong class="font-bold" >{{user.nickname}}</strong></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a  href="form_avatar.html">修改头像</a>
+                                </li>
+                                <li><a href="profile.html">个人资料</a>
+                                </li>
+                                <li><a href="contacts.html">联系我们</a>
+                                </li>
+                                <li><a  href="mailbox.html">信箱</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="login.html">安全退出</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="clients-list">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> 联系人</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> 公司</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="查找联系人" class="input form-control">
+                                         <span class="input-group-btn">
+                                             <button type="button" class="btn btn btn-primary"> <i class="fa fa-search"></i> 搜索</button>
+                                         </span>
+                                    </div>
+                                    <div style="height: 20px"></div>
+                                        <div class="full-height-scroll" style="width:auto;height: 100%;">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover" id="tableLinkmans">
+                                                </table>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div id="tab-2" class="tab-pane"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div id="chatWindow" style="display: none">
+                            <div class="ibox chat-view">
+                                <div class="ibox-title">
+                                    <small class="pull-right text-muted">最新消息:2015-02-02 18.39.23</small>
+                                </div>
+                                <div class="chat-discussion">
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 颜文字君</a>
+                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
+                                            <span class="message-content">
+											H+ 是个好框架
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 林依晨Ariel </a>
+                                            <span class="message-date">  2015-02-02 11:12:36 </span>
+                                            <span class="message-content">
+											jQuery表单验证插件 - 让表单验证变得更容易
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 谨斯里 </a>
+                                            <span class="message-date">  2015-02-02 11:12:36 </span>
+                                            <span class="message-content">
+											验证日期格式(类似30/30/2008的格式,不验证日期准确性只验证格式
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 林依晨Ariel </a>
+                                            <span class="message-date">  2015-02-02 - 11:12:36 </span>
+                                            <span class="message-content">
+											还有约79842492229个Bug需要修复
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="chat-message">
+                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> 林依晨Ariel </a>
+                                            <span class="message-date">  2015-02-02 11:12:36 </span>
+                                            <span class="message-content">
+											九部令人拍案叫绝的惊悚悬疑剧情佳作】如果你喜欢《迷雾》《致命ID》《电锯惊魂》《孤儿》《恐怖游轮》这些好片，那么接下来推荐的9部同类题材并同样出色的的电影，绝对不可错过哦~
+
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-message-form">
+                                    <div class="form-group">
+                                        <textarea class="form-control message-input"  v-model="messageInstant.text" @keyup.enter="sendMessage" name="message" placeholder="输入消息内容，按回车键发送"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" id="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header modal-header-style">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">找人</h4>
+                            </div>
+                            <div class="modal-body overlay-wrapper">
+
+                                <div class="row">
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" v-model="q.strangeAcc"  placeholder="账号">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button class="btn-primary" @click="findByStrangeAcc">搜索</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="chat-user" id="divChatUser" style="display: none;">
+                                                <span class="pull-right label label-primary" id="strangeAccount" data-strangeAccount="">加为好友</span>
+                                                <img class="chat-avatar"   src="/resources/img/inn-bird.png" alt="" id="strangeHeadImg">
+                                                <div class="chat-user-name">
+                                                    <a href="#" id="strangeNickname"></a>
+                                                </div>
+                                            </div>
+                                            <div class="chat-user" id="divNotFind" style="display: none;">
+                                                <label class="badge-warning-light">没有找到相关结果</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-dialog -->
+</div>
+<script src="/resources/hplus/js/jquery.min.js?v=2.1.4"></script>
+<script src="/resources/hplus/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/resources/hplus/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/resources/hplus/js/content.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<script src="/resources/js/vue.min.js"></script>
+<script src="/resources/my/js/main.js"></script>
+
+</body>
+</html>

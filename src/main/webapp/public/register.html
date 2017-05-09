@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!--<link rel="stylesheet" href="static/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="/resources/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/resources/css/all-skins.min.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/resources/js/html5shiv.min.js"></script>
+    <script src="/resources/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!--h+-->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/resources/hplus/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/resources/hplus/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+
+    <link href="/resources/hplus/css/animate.min.css" rel="stylesheet">
+    <link href="/resources/hplus/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <!--h+-->
+    <title>FlyBird登录</title>
+    <script type="text/javascript" src="/resources/hplus/js/jquery.min.js"></script>
+</head>
+<body class="bg-gray-light">
+<div class="middle-box text-center animated fadeInDown">
+    <img src="/resources/img/inn-bird.png" alt="flybird"/>
+    <h3 class="font-bold">FLYBIRD</h3>
+    <form class="form-horizontal m-t" id="signupForm">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">账号：</label>
+            <div class="col-sm-8">
+                <input id="account" name="account" class="form-control" type="text" aria-required="true" aria-invalid="true" class="error">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">密码：</label>
+            <div class="col-sm-8">
+                <input id="password" name="password" class="form-control" type="password">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">确认密码：</label>
+            <div class="col-sm-8">
+                <input id="confirm_password" name="confirm_password" class="form-control" type="password">
+                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">E-mail：</label>
+            <div class="col-sm-8">
+                <input id="email" name="email" class="form-control" type="email">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="checkbox" id="agree" name="agree"> 我已经认真阅读并同意《FlyBird使用协议》
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <button class="btn btn-primary" id="submitBtn">提交</button>&nbsp;&nbsp;
+                <button class="btn btn-primary">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/resources/hplus/js/jquery.min.js?v=2.1.4"></script>
+<script src="/resources/hplus/js/bootstrap.min.js?v=3.3.6"></script>
+<script>
+   $(function () {
+
+       $("#submitBtn").click(function (event) {
+           event.preventDefault();     //阻止提交按钮的默认行为（提交表单）
+           var account = $("#account").val();
+           var password= $("#password").val();
+           var email = $("#email").val();
+           var confirm_password = $("#confirm_password").val();
+           var user = {};
+           user.account = account;
+           user.password = password;
+           user.confirm_password = confirm_password;
+           user.email = email;
+           $.ajax({
+               type: "POST",
+               url: "/sys/user/register",
+               data: JSON.stringify(user),
+             contentType:"application/json",
+               dataType: "json",
+               success: function (r) {
+                   if (r.code === 0) {
+                       alert('注册成功', function (index) {
+                       });
+                   } else {
+                       alert(r.msg);
+                   }
+               }
+           });
+       });
+
+   });
+</script>
+</body>
+
+</html>
