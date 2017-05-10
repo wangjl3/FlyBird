@@ -31,7 +31,8 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
         if(account!=null){
             return true;
         }
-        request.getRequestDispatcher("/public/login.html").forward(request,response);
+        //request.getRequestDispatcher("/public/login.html").forward(request,response);
+        response.sendRedirect("/public/login.html");
         return false;
     }
     //进入Handler方法后，返回modelAndView之前

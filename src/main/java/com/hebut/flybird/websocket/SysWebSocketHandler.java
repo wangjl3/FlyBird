@@ -69,7 +69,8 @@ public class SysWebSocketHandler implements WebSocketHandler {
         if(message.getPayloadLength()==0)return;
         MessageInstant messageInstant=new Gson().fromJson(message.getPayload().toString(),MessageInstant.class);
         messageInstant.setDate(new Date());
-        sendMessageToUser(messageInstant.getToAccount(), new TextMessage(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(messageInstant)));
+        Data  data = new Data().code(Data.CODE_TEXT_DATA).put("msg",messageInstant);
+        sendMessageToUser(messageInstant.getToAccount(), new TextMessage(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(data)));
     }
 
     /**
@@ -153,10 +154,4 @@ public class SysWebSocketHandler implements WebSocketHandler {
             webSocketSession.sendMessage(message);
         }
     }
-
-//    public static void main(String[] args) {
-//        Data data = new Data().code(Data.CODE_UPDATE_STATUS).put("data",new UpdateStatusMessage("user1",Constants.FREE));
-//        String s = new GsonBuilder().create().toJson(data);
-//        System.out.println(s);
-//    }
 }

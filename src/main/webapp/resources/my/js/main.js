@@ -1,6 +1,28 @@
 /**
  * Created by king on 2017/5/6.
  */
+function  jMap() {
+    var arr = {};
+    this.put  = function (key,value) {
+        arr[key] = value;
+    }
+    this.get = function (key) {
+        if(arr[key]){
+            return arr[key];
+        }else {
+            return null;
+        }
+    }
+    this.remove = function (key) {
+        delete  arr[key];
+    }
+    this.eachMap = function (fn) {
+        for(var key  in  arr){
+            fn(key,arr[key]);
+        }
+    }
+}
+
 function statusToText(uplineStatus) {
     var uplineinfo = "离线";
     if(uplineStatus == 1){
@@ -18,6 +40,7 @@ function statusToText(uplineStatus) {
     }
     return uplineinfo;
 }
+var  contactMap = new jMap();
 function loadLinkmanMessage() {
     var linkmans = [];
     $.ajax({
@@ -28,22 +51,19 @@ function loadLinkmanMessage() {
                 linkmans = result.linkmans;
                 var table = $("#tableLinkmans");
                 //     <!--</tr>-->
-                console.log(linkmans[0].headImage);
                 for(var index in linkmans){
                     var headImage =  linkmans[index].headImage;
                     var remark = linkmans[index].remark;
                     var watchword = linkmans[index].watchword;
                     var uplineStatus= linkmans[index].uplineStatus;
                     var account = linkmans[index].account;
+                    contactMap.put(account,[]);
                     var tr =  $("<tr class='linkmanItem' id='linkmanItem_"+account+"'></tr>");
-                    console.log(headImage);
-                    console.log(remark);
-                    console.log(uplineStatus);
                     if(!headImage){
                         headImage = "/resources/img/defaulthead.png";
                     }
                     var td1 = $("<td class='client-avatar'></td>");
-                    var img = $("<img src='"+headImage+"'>");
+                    var img = $("<img src='"+headImage+"' id='img_"+account+"'>");
                     img.appendTo(td1);
                     td1.appendTo(tr);
 
@@ -64,7 +84,6 @@ function loadLinkmanMessage() {
 
 
 }
-
 Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
         "M+": this.getMonth() + 1, //月份
@@ -86,14 +105,18 @@ Date.prototype.Format = function (fmt) { //author: meizz
 // public static final int CODE_UPDATE_STATUS = -2;
 // //被别人添加为好友
 // public static  final int CODE_FRIENDING_DATA  = -3;
+
+var  contactsMap = new jMap();
+
 $(function () {
+    var contactArray = [];
     var path = window.location.hostname + ":" + window.location.port;
     var websocket;
     if ('WebSocket' in window) {
         websocket = new WebSocket("ws://" + path + "/ws");
     }
     websocket.onopen = function (event) {
-
+       vm.websocket = websocket;
     }
     websocket.onmessage = function (event) {
         var data = JSON.parse(event.data);
@@ -103,6 +126,21 @@ $(function () {
             var status = message.status;
             var statusInfo = statusToText(status);
             $("#status_"+account).text(statusInfo);
+        }
+        if(data.code == -1){
+            var messageInstant = data.msg;
+            var mess = {};
+            mess.fromAccount = messageInstant.fromAccount;
+            mess.toAccount = messageInstant.toAccount;
+            mess.text = messageInstant.text;
+            contactMap.get(messageInstant.fromAccount).push(mess);
+            if(vm.linkmanAccount==messageInstant.fromAccount){
+                var chatItem = "<div style='overflow:hidden'>"+
+                    "<div style='float: left'>"+
+                    "<img class='message-avatar' style='float: left;'   src='"+vm.linkmanHeadImage+"' alt=''>" +
+                    "<div style='width: 100%;padding-left: 65px; position:relative;' ><div  style='display:inline-block;margin-top: 15px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background-color: #81DDDD'><span class='message-content' style='padding: 10px'>"+messageInstant.text+"</span></div><span style='position:absolute;top:21px; left:56px;width: 0;height: 0;border-top: 5px solid transparent;border-right: 10px solid #81DDDD;border-bottom: 5px solid transparent;display:inline-block;'></span></div></div></div>";
+                $("#chatContent").append(chatItem);
+            }
         }
     }
 
@@ -123,7 +161,33 @@ $(function () {
     $(document).on('click','.linkmanItem',function () {
         var linkmanItemId = $(this).attr("id");
         var linkmanAccount = linkmanItemId.split('_')[1];
-        vm.messageInstant.toAccount = linkmanAccount;
+        vm.linkmanAccount = linkmanAccount;
+        console.log(linkmanAccount);
+        $("#chatWindow").hide();
+        $("#chatContent").empty();
+        var chatMessageArray = contactMap.get(linkmanAccount);
+        for(var messageInstant in chatMessageArray){
+            //获取到被点击联系人的头像信息
+             var headImage = $("#img_"+linkmanAccount).attr("src");
+             vm.linkmanHeadImage = headImage;
+             console.log(headImage);
+            //自己写的信息，放在右边
+            if(chatMessageArray[messageInstant].fromAccount == vm.user.account){
+                var chatItem = "<div style='overflow:hidden'>"+
+                    "<div style='float: right'>"+
+                    "<img class='message-avatar' style='float: right;'   src='"+vm.user.headImage+"' alt=''>" +
+                    "<div style='width: 100%;padding-right: 65px; position:relative;' ><div  style='display:inline-block;margin-top: 15px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background-color: #81DDDD'><span class='message-content' style='padding: 10px'>"+chatMessageArray[messageInstant].text+"</span></div><span style='position:absolute;top:21px; right:56px;width: 0;height: 0;border-top: 5px solid transparent;border-left: 10px solid #81DDDD;border-bottom: 5px solid transparent;display:inline-block;'></span></div></div></div>";
+                $("#chatContent").append(chatItem);
+            }
+            //收到的消息，放在左边
+            if(chatMessageArray[messageInstant].fromAccount == vm.linkmanAccount){
+                var chatItem = "<div style='overflow:hidden'>"+
+                    "<div style='float: left'>"+
+                    "<img class='message-avatar' style='float: left;'   src='"+headImage+"' alt=''>" +
+                    "<div style='width: 100%;padding-left: 65px; position:relative;' ><div  style='display:inline-block;margin-top: 15px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background-color: #81DDDD'><span class='message-content' style='padding: 10px'>"+chatMessageArray[messageInstant].text+"</span></div><span style='position:absolute;top:21px; left:56px;width: 0;height: 0;border-top: 5px solid transparent;border-right: 10px solid #81DDDD;border-bottom: 5px solid transparent;display:inline-block;'></span></div></div></div>";
+                $("#chatContent").append(chatItem);
+            }
+        }
         $("#chatWindow").show();
     });
     $("#strangeAccount").click(function () {
@@ -150,18 +214,35 @@ var vm = new Vue({
             linkmanAccount: null,
             strangeAcc:null
         },
-        linkmanAccount:null,
-        messageInstant:{},
-        user:{}
+        linkmanAccount:"",
+        messageInstant:{text:""},
+        user:{},
+        websocket:null,
+        linkmanHeadImage: null,
     },
     methods: {
         addNewFriend: function () {
             $("#dialog").modal('show');
         },
-        sendMessage:function (){
-            messageInstant.fromAccount = user.account;
-
-            websocket.send(JSON.stringify(messageInstant));
+        sendMessage:function (ev){
+            ev.preventDefault();
+            vm.messageInstant.fromAccount = vm.user.account;
+            vm.messageInstant.toAccount = vm.linkmanAccount;
+            var mess = {};
+            mess.fromAccount = vm.messageInstant.fromAccount;
+            mess.toAccount = vm.messageInstant.toAccount;
+            mess.text = vm.messageInstant.text ;
+            console.log(JSON.stringify(vm.linkmanAccount));
+            contactMap.get(vm.linkmanAccount).push(mess);
+             vm.websocket.send(JSON.stringify(vm.messageInstant));
+            var chatItem = "<div style='overflow:hidden'>"+
+                "<div style='float: right'>"+
+               "<img class='message-avatar' style='float: right;'   src='"+vm.user.headImage+"' alt=''>" +
+               "<div style='width: 100%;padding-right: 65px; position:relative;' ><div  style='display:inline-block;margin-top: 15px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background-color: #81DDDD'><span class='message-content' style='padding: 10px'>"+vm.messageInstant.text+"</span></div><span style='position:absolute;top:21px; right:56px;width: 0;height: 0;border-top: 5px solid transparent;border-left: 10px solid #81DDDD;border-bottom: 5px solid transparent;display:inline-block;'></span></div></div></div>";
+            $("#chatContent").append(chatItem);
+            var div = document.getElementById('chatContent');
+            div.scrollTop = div.scrollHeight;
+            vm.messageInstant.text = "";
         },
         findByStrangeAcc:function () {
             $.ajax({

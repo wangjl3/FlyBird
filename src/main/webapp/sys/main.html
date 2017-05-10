@@ -82,64 +82,13 @@
                         <div id="chatWindow" style="display: none">
                             <div class="ibox chat-view">
                                 <div class="ibox-title">
-                                    <small class="pull-right text-muted">最新消息:2015-02-02 18.39.23</small>
+                                    <small class="pull-right text-muted">{{linkmanAccount}}</small>
                                 </div>
-                                <div class="chat-discussion">
-                                    <div class="chat-message">
-                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
-                                        <div class="message">
-                                            <a class="message-author" href="#"> 颜文字君</a>
-                                            <span class="message-date"> 2015-02-02 18:39:23 </span>
-                                            <span class="message-content">
-											H+ 是个好框架
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="chat-message">
-                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
-                                        <div class="message">
-                                            <a class="message-author" href="#"> 林依晨Ariel </a>
-                                            <span class="message-date">  2015-02-02 11:12:36 </span>
-                                            <span class="message-content">
-											jQuery表单验证插件 - 让表单验证变得更容易
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="chat-message">
-                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
-                                        <div class="message">
-                                            <a class="message-author" href="#"> 谨斯里 </a>
-                                            <span class="message-date">  2015-02-02 11:12:36 </span>
-                                            <span class="message-content">
-											验证日期格式(类似30/30/2008的格式,不验证日期准确性只验证格式
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="chat-message">
-                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
-                                        <div class="message">
-                                            <a class="message-author" href="#"> 林依晨Ariel </a>
-                                            <span class="message-date">  2015-02-02 - 11:12:36 </span>
-                                            <span class="message-content">
-											还有约79842492229个Bug需要修复
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="chat-message">
-                                        <img class="message-avatar" src="/resources/img/defaulthead.png" alt="">
-                                        <div class="message">
-                                            <a class="message-author" href="#"> 林依晨Ariel </a>
-                                            <span class="message-date">  2015-02-02 11:12:36 </span>
-                                            <span class="message-content">
-											九部令人拍案叫绝的惊悚悬疑剧情佳作】如果你喜欢《迷雾》《致命ID》《电锯惊魂》《孤儿》《恐怖游轮》这些好片，那么接下来推荐的9部同类题材并同样出色的的电影，绝对不可错过哦~
-
-                                    </span>
-                                        </div>
-                                    </div>
+                                <div class="chat-discussion" id="chatContent">
                                 </div>
                                 <div class="chat-message-form">
                                     <div class="form-group">
-                                        <textarea class="form-control message-input"  v-model="messageInstant.text" @keyup.enter="sendMessage" name="message" placeholder="输入消息内容，按回车键发送"></textarea>
+                                        <textarea  class="form-control message-input"  v-model="messageInstant.text"   @keyup.enter="sendMessage" name="message" placeholder="输入消息内容，按回车键发送"></textarea>
                                     </div>
                                 </div>
                             </div>
