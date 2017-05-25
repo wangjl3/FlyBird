@@ -9,7 +9,12 @@ import java.util.List;
  */
 public interface UserService {
     User queryByAccount(String account);
+    List<User> queryLinkmansByAccountAndRemarkLike(String account,String remark);
     boolean save(User user);
     boolean login(User user);
     List<User> queryLinkmansByAccount(String account);
+
+    void updateProfile(String account,User user);
+
+    User queryByStrangeAccount(String account,String strangeAcc);
 }

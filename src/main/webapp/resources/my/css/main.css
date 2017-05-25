@@ -1,0 +1,14 @@
+.messNotReadNum{
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    background: red;
+    width: 20px;
+    height: 20px;
+    display: none;
+    color:white;
+    line-height: 20px;
+    text-align: center;
+}
+.addMessNotReadNum{
+    display: block;
+}

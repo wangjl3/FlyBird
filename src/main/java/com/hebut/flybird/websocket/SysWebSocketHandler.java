@@ -58,7 +58,6 @@ public class SysWebSocketHandler implements WebSocketHandler {
             }
             Data data = new Data().code(Data.CODE_UPDATE_STATUS).put("msg",new MessageUpdateStatus(account,Constants.FREE));
             uplineNotice(linkManUplineAccounts,new TextMessage(new GsonBuilder().create().toJson(data)));
-
         }
     }
     /**

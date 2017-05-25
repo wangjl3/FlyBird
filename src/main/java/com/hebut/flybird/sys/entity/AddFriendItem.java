@@ -11,19 +11,15 @@ import javax.persistence.Table;
 public class AddFriendItem extends BaseEntity<Long>{
     private String fromAcc;
     private String toAcc;
-
     public String getFromAcc() {
         return fromAcc;
     }
-
     public void setFromAcc(String fromAcc) {
         this.fromAcc = fromAcc;
     }
-
     public String getToAcc() {
         return toAcc;
     }
-
     public void setToAcc(String toAcc) {
         this.toAcc = toAcc;
     }

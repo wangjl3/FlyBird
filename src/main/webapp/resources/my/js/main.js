@@ -1,6 +1,7 @@
 /**
  * Created by king on 2017/5/6.
  */
+
 function  jMap() {
     var arr = {};
     this.put  = function (key,value) {
@@ -41,15 +42,16 @@ function statusToText(uplineStatus) {
     return uplineinfo;
 }
 var  contactMap = new jMap();
-function loadLinkmanMessage() {
+function loadLinkmanMessage(url) {
     var linkmans = [];
     $.ajax({
         type: "GET",
-        url: "/sys/linkman/info",
+        url:url,
         success: function(result){
             if(result.code == 0){
                 linkmans = result.linkmans;
                 var table = $("#tableLinkmans");
+                table.empty();
                 //     <!--</tr>-->
                 for(var index in linkmans){
                     var headImage =  linkmans[index].headImage;
@@ -68,21 +70,75 @@ function loadLinkmanMessage() {
                     td1.appendTo(tr);
 
                     var td2 =$("<td class='client-link'></td>");;
-                    var label = $("<label>"+remark+"</label>");
+                    var label = $("<label id='remark_"+account+"'>"+remark+"</label>");
                     label.appendTo(td2);
                     td2.appendTo(tr);
                     var uplineinfo = statusToText(uplineStatus);
+
                     var td3 = $("<td class='client-status'></td>");
                     var span = $("<span class='label label-primary' id='status_"+account+"'>"+uplineinfo+"</span>")
                     span.appendTo(td3);
                     td3.appendTo(tr);
+
+                    var td4 =  $("<td></td>");
+                    var i = $("<i class='messNotReadNum' id='notRead_"+account+"'></i>");
+                    i.appendTo(td4);
+                    td4.appendTo(tr);
+
+                    tr.appendTo(table);
+
+
+                }
+            }
+        }
+    });
+}
+function loadFriendsApply(){
+    var linkmans = [];
+    $.ajax({
+        type: "GET",
+        url:"/sys/addfrienditem/requestFromOthers",
+        success: function(result){
+            if(result.code == 0){
+                strangeUsers = result.strangeUsers;
+                var table = $("#tableFriendsApply");
+                table.empty();
+                //     <!--</tr>-->
+                for(var index in strangeUsers){
+                    var headImage =  strangeUsers[index].headImage;
+                    var nickname = strangeUsers[index].nickname;
+                    var account = strangeUsers[index].account;
+                    var tr =  $("<tr data-apply-account='"+account+"'></tr>");
+                    if(!headImage){
+                        headImage = "/resources/img/defaulthead.png";
+                    }
+                    var td1 = $("<td class='client-avatar'></td>");
+                    var img = $("<img src='"+headImage+"'>");
+                    img.appendTo(td1);
+                    td1.appendTo(tr);
+                    var applyMess = nickname + "  请求加为好友"
+                    var td2 =$("<td class='client-link'></td>");;
+                    var label = $("<label>"+applyMess+"</label>");
+                    label.appendTo(td2);
+                    td2.appendTo(tr);
+
+
+                    var td3 = $("<td class='client-status'></td>");
+                    var span = $("<span class='label label-primary agreeMakeFriends'>同意</span>")
+                    span.appendTo(td3);
+                    td3.appendTo(tr);
+
+
+                    var td4 = $("<td class='client-status'></td>");
+                    var span = $("<span class='label label-warning-light addInBlackMenu'>加入黑名单</span>")
+                    span.appendTo(td4);
+                    td4.appendTo(tr);
+
                     tr.appendTo(table);
                 }
             }
         }
     });
-
-
 }
 Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
@@ -140,6 +196,17 @@ $(function () {
                     "<img class='message-avatar' style='float: left;'   src='"+vm.linkmanHeadImage+"' alt=''>" +
                     "<div style='width: 100%;padding-left: 65px; position:relative;' ><div  style='display:inline-block;margin-top: 15px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;background-color: #81DDDD'><span class='message-content' style='padding: 10px'>"+messageInstant.text+"</span></div><span style='position:absolute;top:21px; left:56px;width: 0;height: 0;border-top: 5px solid transparent;border-right: 10px solid #81DDDD;border-bottom: 5px solid transparent;display:inline-block;'></span></div></div></div>";
                 $("#chatContent").append(chatItem);
+            }else {
+                var iElem = $("#notRead_"+messageInstant.fromAccount);
+                var messNotRead = iElem.text();
+                iElem.addClass("addMessNotReadNum");
+                if(!messNotRead){
+                    iElem.text(1);
+                }else {
+                    var num =  parseInt(messNotRead);
+                    num++;
+                    iElem.text(num);
+                }
             }
         }
     }
@@ -156,21 +223,43 @@ $(function () {
         }
     });
     //加载联系人信息
-    loadLinkmanMessage();
+    loadLinkmanMessage("/sys/linkman/info");
+    //加载"被别人加为好友"消息
+    loadFriendsApply();
+    $(document).on('click',".agreeMakeFriends",function () {
+        var applyAccount =  $(this).parent().parent().attr("data-apply-account");
+        $.ajax({
+            type: "POST",
+            url: "/sys/linkman/addLinkman",
+            data: "applyAccount="+applyAccount,
+            dataType: "json",
+            success: function(result){
+                if(result.code == 0){
+                    alert("同意成功");
+                    parent.location.href ='/sys/main.html?date='+ new Date();
+                }else{
+                    alert(result.msg);
+                }
+            }
+        });
 
+    });
     $(document).on('click','.linkmanItem',function () {
         var linkmanItemId = $(this).attr("id");
         var linkmanAccount = linkmanItemId.split('_')[1];
+        //把未读消息标记去掉
+        $("#notRead_"+linkmanAccount).text(0);
+        $("#notRead_"+linkmanAccount).removeClass("addMessNotReadNum");
         vm.linkmanAccount = linkmanAccount;
-        console.log(linkmanAccount);
+        //在聊天框的头部显示联系人的备注或昵称
+        vm.linkmanRemark = $("#remark_"+linkmanAccount).text();
         $("#chatWindow").hide();
         $("#chatContent").empty();
         var chatMessageArray = contactMap.get(linkmanAccount);
+        //获取到被点击联系人的头像信息
+        var headImage = $("#img_"+linkmanAccount).attr("src");
+        vm.linkmanHeadImage = headImage;
         for(var messageInstant in chatMessageArray){
-            //获取到被点击联系人的头像信息
-             var headImage = $("#img_"+linkmanAccount).attr("src");
-             vm.linkmanHeadImage = headImage;
-             console.log(headImage);
             //自己写的信息，放在右边
             if(chatMessageArray[messageInstant].fromAccount == vm.user.account){
                 var chatItem = "<div style='overflow:hidden'>"+
@@ -205,23 +294,32 @@ $(function () {
                 }
             }
         });
+
+
     });
 });
 var vm = new Vue({
     el: '#rrapp',
     data: {
         q: {
-            linkmanAccount: null,
+            remark: null,
             strangeAcc:null
         },
         linkmanAccount:"",
         messageInstant:{text:""},
+        linkmanRemark:"",
         user:{},
         websocket:null,
         linkmanHeadImage: null,
     },
     methods: {
         addNewFriend: function () {
+            vm.q.strangeAcc = null;
+            $("#strangeNickname").text("");
+            $("#strangeHeadImg").text("");
+            $("#strangeAccount").attr("strangeAccount","");
+            $("#divStrangeUser").hide();
+            $("#divNotFind").hide();
             $("#dialog").modal('show');
         },
         sendMessage:function (ev){
@@ -232,7 +330,6 @@ var vm = new Vue({
             mess.fromAccount = vm.messageInstant.fromAccount;
             mess.toAccount = vm.messageInstant.toAccount;
             mess.text = vm.messageInstant.text ;
-            console.log(JSON.stringify(vm.linkmanAccount));
             contactMap.get(vm.linkmanAccount).push(mess);
              vm.websocket.send(JSON.stringify(vm.messageInstant));
             var chatItem = "<div style='overflow:hidden'>"+
@@ -251,16 +348,25 @@ var vm = new Vue({
                 success: function(result){
                     if(result.code == 0){
                         $("#divNotFind").hide();
-                        $("#divChatUser").show();
+                        $("#divStrangeUser").show();
                         $("#strangeNickname").text(result.user.nickname);
                         $("#strangeAccount").attr("data-strangeAccount",result.user.account);
                     }else{
-                        $("#divChatUser").hide();
+                        $("#divStrangeUser").hide();
                         $("#divNotFind").show();
                     }
                 }
             });
+        },
+        queryLinkman:function () {
+            if(!vm.q.remark){
+                loadLinkmanMessage("/sys/linkman/info");
+            }else {
+                loadLinkmanMessage("/sys/linkman/info?remark="+vm.q.remark);
+            }
+
         }
     }
 });
+
 

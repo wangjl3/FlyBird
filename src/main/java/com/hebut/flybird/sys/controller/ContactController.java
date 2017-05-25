@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -32,9 +33,14 @@ public class ContactController {
     @Autowired
     private AddFriendItemService addFriendItemService;
     @RequestMapping("/info")
-    public R findLinkmans(HttpServletRequest request){
+    public R findLinkmans(HttpServletRequest request,String remark){
         String account = (String) request.getSession().getAttribute("account");
-        List<User> linkmans = userService.queryLinkmansByAccount(account);
+        List<User> linkmans = null;
+        if(remark == null || remark.equals("")){
+            linkmans = userService.queryLinkmansByAccount(account);
+        }else {
+            linkmans = userService.queryLinkmansByAccountAndRemarkLike(account,remark);
+        }
         for (User linkman : linkmans) {
             Integer uplineStatus = GlobalFactory.getUsersUplineStatusMap().get(linkman.getAccount());
             if (uplineStatus == null) {
@@ -44,6 +50,16 @@ public class ContactController {
             }
         }
         return R.ok().put("linkmans",linkmans);
+    }
+    @RequestMapping("/addLinkman")
+    @Transactional
+    public R addLinkman(HttpServletRequest request,String applyAccount){
+        String account = (String) request.getSession().getAttribute("account");
+        Contact contact = new Contact();
+        contact.setAccount(account);
+        contact.setLinkmanAccount(applyAccount);
+        contactService.save(contact);
+        return R.ok();
     }
 }
 

@@ -9,5 +9,6 @@ import java.util.List;
  * Created by WangJL on 2017/5/7.
  */
 public interface ContactRepository extends BaseRepository<Contact,Long>,JpaSpecificationExecutor<Contact>{
+    List<Contact> findByAccountAndRemarkLike(String account,String remark);
     List<Contact> findByAccount(String account);
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by WangJL on 2017/5/6.
@@ -35,10 +37,10 @@ public class LoginController {
         return R.error("用户名或密码错误");
     }
     //退出登录
-    @RequestMapping(value = "/logout",method = RequestMethod.POST)
-    public R doLogout(HttpServletRequest request){
+    @RequestMapping(value = "/logout",method = RequestMethod.GET)
+    public void doLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         GlobalFactory.getUsersUplineStatusMap().remove(request.getSession().getAttribute("account"));
         request.getSession().invalidate();
-        return R.ok("退出登录成功");
+        response.sendRedirect("/public/login.html");
     }
 }

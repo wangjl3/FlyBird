@@ -78,4 +78,64 @@ public class UserServiceImpl implements UserService {
         }
         return  linkmans;
     }
+
+    @Override
+    public List<User> queryLinkmansByAccountAndRemarkLike(String account,String remark) {
+        if(remark == null || remark == ""){
+            remark = "%%";
+        }else {
+            remark = "%"+remark+"%";
+        }
+        List<Contact> contacts = contactRepository.findByAccountAndRemarkLike(account,remark);
+        List<String> accounts = new ArrayList<String>();
+        //定义账号和备注的map
+        Map<String,String> map = new HashMap<String, String>();
+        //得到所有的好友账号
+        for (Contact contact : contacts) {
+            map.put(contact.getLinkmanAccount(),contact.getRemark());
+            accounts.add(contact.getLinkmanAccount());
+        }
+        //查询所有好友信息
+        List<User> linkmans = userRepository.findByAccountIn(accounts);
+        //加载备注信息
+        for (User linkman : linkmans) {
+            if (map.get(linkman.getAccount())!=null) {
+                //有备注设置备注
+                linkman.setRemark(map.get(linkman.getAccount()));
+            }else {
+                //没有备注，备注为好友昵称
+                linkman.setRemark(linkman.getNickname());
+            }
+        }
+        return  linkmans;
+    }
+
+    @Override
+    public void updateProfile(String account,User user) {
+        User dbUser = userRepository.findByAccount(account);
+        dbUser.setWatchword(user.getWatchword());
+        dbUser.setNickname(user.getNickname());
+        dbUser.setHeadImage(user.getHeadImage());
+        userRepository.save(dbUser);
+
+    }
+
+    @Override
+    public User queryByStrangeAccount(String account,String strangeAcc) {
+        List<Contact> contacts = contactRepository.findByAccount(account);
+        List<String> accounts = new ArrayList<String>();
+        //把自己的账号加入accounts
+        accounts.add(account);
+        //得到所有的好友账号
+        for (Contact contact : contacts) {
+            accounts.add(contact.getLinkmanAccount());
+        }
+        User strangeUser = userRepository.findByAccount(strangeAcc);
+       if(strangeUser!=null){
+           if(!accounts.contains(strangeUser.getAccount())){
+               return strangeUser;
+           }
+       }
+       return null;
+    }
 }

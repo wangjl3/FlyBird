@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!--<link rel="stylesheet" href="static/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="/resources/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/resources/css/all-skins.min.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="/resources/js/html5shiv.min.js"></script>
+    <script src="/resources/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!--h+-->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/resources/hplus/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/resources/hplus/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="/resources/hplus/css/animate.min.css" rel="stylesheet">
+    <link href="/resources/hplus/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/resources/uploadify/uploadify.css" rel>
+    <link href="/resources/css/profile.css" rel="stylesheet">
+    <!--h+-->
+    <script src="/resources/hplus/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/resources/hplus/js/bootstrap.min.js?v=3.3.6"></script>
+    <script type="text/javascript" src="/resources/uploadify/jquery.uploadify.min.js"></script>
+    <title>个人资料</title>
+</head>
+<body class="bg-gray-light">
+<div id="profile">
+    <div class="middle-box text-center animated fadeInDown">
+        <div id="imgdiv" class="imgdiv">
+            <img id="imgUrl"  :src="user.headImage" />
+            <div class="up_img_warp">
+                <input type="file" class="up_img" id="up_img"/>
+            </div>
+        </div>
+        <div class="form-horizontal m-t" id="signupForm">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">昵称：</label>
+                <div class="col-sm-8">
+                    <input v-model="user.nickname"  readonly="readonly" class="form-control" type="text">
+                </div>
+                <div class="col-sm-1" id="editNickname">
+                    <button class="btn btn-white"><i class="fa fa-edit"></i>编辑</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">性别：</label>
+                <div class="col-sm-4">
+                    <label><input  type="radio"  v-model="user.gender" value="1" />男</label><br>
+                </div>
+                <div class="col-sm-4">
+                    <label><input  type="radio" v-model="user.gender" value="0" />女</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">签名：</label>
+                <div class="col-sm-8">
+                    <textarea  style="height: 100px;width: 400px" v-model="user.watchword" readonly="readonly" class="form-control"></textarea>
+                </div>
+                <div class="col-sm-1">
+                    <button class="btn btn-white" id="editWatchword"><i class="fa fa-edit"></i>编辑</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-3">
+                    <button class="btn btn-primary" id="submitBtn" @click="updateProfile">提交</button>&nbsp;&nbsp;
+                    <button class="btn btn-primary" @click="cancle">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/resources/js/vue.min.js"></script>
+<script src="/resources/my/js/profile.js"></script>
+</body>
+</html>
